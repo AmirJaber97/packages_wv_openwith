@@ -118,38 +118,22 @@
   NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  NSString *urlString = nil;
-
   if (navigationAction.request.URL) {
-    urlString = navigationAction.request.URL.absoluteString;
-  } else if (navigationAction.request.mainDocumentURL) {
-    urlString = navigationAction.request.mainDocumentURL.absoluteString;
-  }
-
-  if (urlString.length == 0 || [urlString isEqualToString:@"about:blank"]) {
-    NSLog(@"Invalid URL: Empty URL or about:blank");
-    return nil;
-  }
-
-  NSURL *url = navigationAction.request.mainDocumentURL ?: navigationAction.request.URL;
-
-  BOOL matchDeferred = [urlString containsString:@"page.link"];
-
-  if (matchDeferred) {
-    NSLog(@"Opening deferred link");
-
-    if ([[UIApplication sharedApplication] canOpenURL:url]) {
-      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-    } else {
-      NSLog(@"Invalid URL: %@", url);
+    NSURL *url = navigationAction.request.URL;
+    if (url && (![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"])) {
+      if ([[UIApplication sharedApplication] canOpenURL:url]) {
+        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+      } else {
+        NSLog(@"Invalid URL: %@", url);
+      }
+      return nil;
     }
-
-    return nil;
   }
 
   if (!navigationAction.targetFrame.isMainFrame) {
     NSLog(@"Opening in external browser");
 
+    NSURL *url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
     if ([[UIApplication sharedApplication] canOpenURL:url]) {
       [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
     } else {
