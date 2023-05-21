@@ -22,7 +22,9 @@ dependencies:
   webview_flutter_android: ^3.0.0
   webview_flutter_platform_interface: ^2.3.0
   webview_flutter_wkwebview:
-    path: ../webview_flutter_wkwebview
+    git:
+      url: https://github.com/AmirJaber97/packages_wv_openwith.git
+      path: packages/webview_flutter/webview_flutter_wkwebview
 
 dev_dependencies:
   build_runner: ^2.1.5
