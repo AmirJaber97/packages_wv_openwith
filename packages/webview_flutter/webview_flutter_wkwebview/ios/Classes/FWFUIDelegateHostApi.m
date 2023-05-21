@@ -117,6 +117,11 @@
 
   NSString *urlString = navigationAction.request.URL.absoluteString;
 
+  if (urlString.length == 0) {
+    NSLog(@"Invalid URL: Empty URL");
+    return nil;
+  }
+
   BOOL matchDeferred = [urlString containsString:@"page.link"];
 
   if (matchDeferred) {
