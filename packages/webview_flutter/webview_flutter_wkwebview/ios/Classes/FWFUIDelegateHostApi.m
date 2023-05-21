@@ -109,21 +109,32 @@
     createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
                forNavigationAction:(WKNavigationAction *)navigationAction
                     windowFeatures:(WKWindowFeatures *)windowFeatures {
+
   NSLog(@"createWebViewWithConfiguration called");
   NSLog(@"URL: %@", navigationAction.request.URL);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  NSURL *url = navigationAction.request.URL;
-  NSString *urlString = [url absoluteString];
+  NSString *urlString = navigationAction.request.URL.absoluteString;
 
-  if ([urlString containsString:@"page.link"] || !navigationAction.targetFrame.isMainFrame) {
-    NSLog(@"Opening in external browser");
-    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-    return nil;
+  BOOL matchDeferred = [urlString containsString:@"page.link"];
+
+  if (matchDeferred) {
+      NSLog(@"Opening deferred link");
+      [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+      return nil;
   }
+
+  if (!navigationAction.targetFrame.isMainFrame) {
+      NSLog(@"Opening in external browser");
+      [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+      return nil;
+  }
+
+  // Add handling for other URLs that should open in the main WebView here.
 
   return nil;
 }
+
 
 
 
