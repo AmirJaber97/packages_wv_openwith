@@ -108,11 +108,18 @@
     createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
                forNavigationAction:(WKNavigationAction *)navigationAction
                     windowFeatures:(WKWindowFeatures *)windowFeatures {
+
+  NSLog(@"createWebViewWithConfiguration called");
+  NSLog(@"URL: %@", navigationAction.request.URL);
+  NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
+
   if (!navigationAction.targetFrame.isMainFrame) {
+    NSLog(@"Opening in external browser");
     [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
   }
   return nil;
 }
+
 
 - (void)webView:(WKWebView *)webView
     requestMediaCapturePermissionForOrigin:(WKSecurityOrigin *)origin
