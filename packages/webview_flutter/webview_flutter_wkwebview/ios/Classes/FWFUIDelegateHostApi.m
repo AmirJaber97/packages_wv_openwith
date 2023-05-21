@@ -112,6 +112,7 @@
 
   NSLog(@"createWebViewWithConfiguration called");
   NSLog(@"URL: %@", navigationAction.request.URL);
+  NSLog(@"navigationAction.request: %@", navigationAction.request);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
   NSString *urlString = navigationAction.request.URL.absoluteString;
