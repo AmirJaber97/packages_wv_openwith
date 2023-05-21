@@ -118,14 +118,22 @@
   NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  NSURL *url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
+  NSString *urlString = nil;
 
-  if (!url || [url.absoluteString isEqualToString:@"about:blank"]) {
+  if (navigationAction.request.URL) {
+    urlString = navigationAction.request.URL.absoluteString;
+  } else if (navigationAction.request.mainDocumentURL) {
+    urlString = navigationAction.request.mainDocumentURL.absoluteString;
+  }
+
+  if (urlString.length == 0 || [urlString isEqualToString:@"about:blank"]) {
     NSLog(@"Invalid URL: Empty URL or about:blank");
     return nil;
   }
 
-  BOOL matchDeferred = [url.absoluteString containsString:@"page.link"];
+  NSURL *url = navigationAction.request.mainDocumentURL ?: navigationAction.request.URL;
+
+  BOOL matchDeferred = [urlString containsString:@"page.link"];
 
   if (matchDeferred) {
     NSLog(@"Opening deferred link");
