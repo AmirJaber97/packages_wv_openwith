@@ -116,7 +116,7 @@
 
   NSURL *url = navigationAction.request.URL;
   NSString *urlString = url ? url.absoluteString : @"<Empty or Invalid URL>";
-  NSLog(@"URL: %@", urlString);
+  NSLog(@"URL: %@", navigationAction.request);
 
   BOOL matchDeferred = [urlString containsString:@"page.link"];
 
