@@ -116,9 +116,14 @@
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
   NSString *urlString = navigationAction.request.URL.absoluteString;
-
   if (urlString.length == 0) {
     NSLog(@"Invalid URL: Empty URL");
+    return nil;
+  }
+
+  NSURL *url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
+  if (url == nil) {
+    NSLog(@"Invalid URL: URL is nil");
     return nil;
   }
 
@@ -127,7 +132,6 @@
   if (matchDeferred) {
       NSLog(@"Opening deferred link");
 
-      NSURL *url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
       if ([[UIApplication sharedApplication] canOpenURL:url]) {
           [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
       } else {
@@ -140,7 +144,6 @@
   if (!navigationAction.targetFrame.isMainFrame) {
       NSLog(@"Opening in external browser");
 
-      NSURL *url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
       if ([[UIApplication sharedApplication] canOpenURL:url]) {
           [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
       } else {
@@ -152,7 +155,6 @@
 
   return nil;
 }
-
 
 
 - (void)webView:(WKWebView *)webView
