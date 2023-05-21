@@ -122,7 +122,7 @@
   if (@available(iOS 14.5, *)) {
     url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
   } else {
-    url = navigationAction.request.URL;
+    url = navigationAction.request.mainDocumentURL ?: navigationAction.request.URL;
   }
 
   if (!url || [url.absoluteString isEqualToString:@"about:blank"]) {
