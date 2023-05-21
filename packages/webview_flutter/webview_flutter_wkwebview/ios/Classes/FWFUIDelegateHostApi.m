@@ -37,6 +37,7 @@
                      configuration:(WKWebViewConfiguration *)configuration
                   navigationAction:(WKNavigationAction *)navigationAction
                         completion:(void (^)(FlutterError *_Nullable))completion {
+  NSLog(@"onCreateWebViewForDelegate called");
   if (![self.instanceManager containsInstance:configuration]) {
     [self.webViewConfigurationFlutterApi createWithConfiguration:configuration
                                                       completion:^(FlutterError *error) {
