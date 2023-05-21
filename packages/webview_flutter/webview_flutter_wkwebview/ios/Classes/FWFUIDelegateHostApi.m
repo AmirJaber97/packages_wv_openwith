@@ -120,21 +120,32 @@
 
   if (matchDeferred) {
       NSLog(@"Opening deferred link");
-      [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+
+      NSURL *url = navigationAction.request.URL;
+      if ([[UIApplication sharedApplication] canOpenURL:url]) {
+          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+      } else {
+          NSLog(@"Invalid URL: %@", url);
+      }
+
       return nil;
   }
 
   if (!navigationAction.targetFrame.isMainFrame) {
       NSLog(@"Opening in external browser");
-      [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+
+      NSURL *url = navigationAction.request.URL;
+      if ([[UIApplication sharedApplication] canOpenURL:url]) {
+          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+      } else {
+          NSLog(@"Invalid URL: %@", url);
+      }
+
       return nil;
   }
 
-  // Add handling for other URLs that should open in the main WebView here.
-
   return nil;
 }
-
 
 
 
