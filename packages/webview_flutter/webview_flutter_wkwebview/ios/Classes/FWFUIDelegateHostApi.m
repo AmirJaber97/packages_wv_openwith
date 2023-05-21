@@ -118,17 +118,19 @@
   NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  NSURL *url = nil;
+  NSString *urlString = nil;
   if (@available(iOS 14.5, *)) {
-    url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
+    urlString = navigationAction.request.URL.absoluteString ?: navigationAction.request.mainDocumentURL.absoluteString;
   } else {
-    url = navigationAction.request.mainDocumentURL ?: navigationAction.request.URL;
+    urlString = navigationAction.request.mainDocumentURL.absoluteString ?: navigationAction.request.URL.absoluteString;
   }
 
-  if (!url || [url.absoluteString isEqualToString:@"about:blank"]) {
+  if (!urlString || [urlString isEqualToString:@"about:blank"]) {
     NSLog(@"Invalid URL: Empty URL or about:blank");
     return nil;
   }
+
+  NSURL *url = [NSURL URLWithString:urlString];
 
   BOOL matchDeferred = [url.absoluteString containsString:@"page.link"];
 
