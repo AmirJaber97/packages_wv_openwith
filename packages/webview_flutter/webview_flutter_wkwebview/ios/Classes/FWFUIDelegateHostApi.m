@@ -118,42 +118,36 @@
   NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  NSString *urlString = navigationAction.request.URL.absoluteString;
-  if (urlString.length == 0 || [urlString isEqualToString:@"about:blank"]) {
+  NSURL *url = navigationAction.request.URL;
+  if (!url || [url.absoluteString isEqualToString:@"about:blank"]) {
     NSLog(@"Invalid URL: Empty URL or about:blank");
     return nil;
   }
 
-  NSURL *url = navigationAction.request.mainDocumentURL;
-  if (url == nil) {
-    NSLog(@"Invalid URL: URL is nil");
+  BOOL matchDeferred = [url.absoluteString containsString:@"page.link"];
+
+  if (matchDeferred) {
+    NSLog(@"Opening deferred link");
+
+    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+    } else {
+      NSLog(@"Invalid URL: %@", url);
+    }
+
     return nil;
   }
 
-  BOOL matchDeferred = [urlString containsString:@"page.link"];
-
-  if (matchDeferred) {
-      NSLog(@"Opening deferred link");
-
-      if ([[UIApplication sharedApplication] canOpenURL:url]) {
-          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-      } else {
-          NSLog(@"Invalid URL: %@", url);
-      }
-
-      return nil;
-  }
-
   if (!navigationAction.targetFrame.isMainFrame) {
-      NSLog(@"Opening in external browser");
+    NSLog(@"Opening in external browser");
 
-      if ([[UIApplication sharedApplication] canOpenURL:url]) {
-          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-      } else {
-          NSLog(@"Invalid URL: %@", url);
-      }
+    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+    } else {
+      NSLog(@"Invalid URL: %@", url);
+    }
 
-      return nil;
+    return nil;
   }
 
   return nil;
