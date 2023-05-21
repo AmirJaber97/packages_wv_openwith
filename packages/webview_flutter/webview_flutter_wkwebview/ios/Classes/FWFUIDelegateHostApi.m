@@ -115,11 +115,12 @@
   NSLog(@"navigationAction.request: %@", navigationAction.request);
   NSLog(@"navigationAction.request.URL.absoluteString: %@", navigationAction.request.URL.absoluteString);
   NSLog(@"navigationAction.request.mainDocumentURL: %@", navigationAction.request.mainDocumentURL);
+  NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
   NSString *urlString = navigationAction.request.URL.absoluteString;
-  if (urlString.length == 0) {
-    NSLog(@"Invalid URL: Empty URL");
+  if (urlString.length == 0 || [urlString isEqualToString:@"about:blank"]) {
+    NSLog(@"Invalid URL: Empty URL or about:blank");
     return nil;
   }
 
@@ -157,6 +158,7 @@
 
   return nil;
 }
+
 
 
 - (void)webView:(WKWebView *)webView
