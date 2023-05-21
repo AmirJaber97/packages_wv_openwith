@@ -109,17 +109,22 @@
     createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
                forNavigationAction:(WKNavigationAction *)navigationAction
                     windowFeatures:(WKWindowFeatures *)windowFeatures {
-
   NSLog(@"createWebViewWithConfiguration called");
   NSLog(@"URL: %@", navigationAction.request.URL);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  if (!navigationAction.targetFrame.isMainFrame) {
+  NSURL *url = navigationAction.request.URL;
+  NSString *urlString = [url absoluteString];
+
+  if ([urlString containsString:@"page.link"] || !navigationAction.targetFrame.isMainFrame) {
     NSLog(@"Opening in external browser");
-    [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+    return nil;
   }
+
   return nil;
 }
+
 
 
 - (void)webView:(WKWebView *)webView
