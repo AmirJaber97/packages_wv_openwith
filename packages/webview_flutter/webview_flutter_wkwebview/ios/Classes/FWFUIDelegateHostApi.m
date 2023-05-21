@@ -4,6 +4,7 @@
 
 #import "FWFUIDelegateHostApi.h"
 #import "FWFDataConverters.h"
+#import <UIKit/UIKit.h>
 
 @interface FWFUIDelegateFlutterApiImpl ()
 // BinaryMessenger must be weak to prevent a circular reference with the host API it
@@ -103,18 +104,16 @@
   return self;
 }
 
-- (WKWebView *)webView:(WKWebView *)webView
-    createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
-               forNavigationAction:(WKNavigationAction *)navigationAction
-                    windowFeatures:(WKWindowFeatures *)windowFeatures {
-  [self.UIDelegateAPI onCreateWebViewForDelegate:self
-                                         webView:webView
-                                   configuration:configuration
-                                navigationAction:navigationAction
-                                      completion:^(FlutterError *error) {
-                                        NSAssert(!error, @"%@", error);
-                                      }];
-  return nil;
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures {
+    if (!navigationAction.targetFrame.isMainFrame) {
+        NSURL *url = navigationAction.request.URL;
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        } else {
+            // Handle error
+        }
+    }
+    return nil;
 }
 
 - (void)webView:(WKWebView *)webView
