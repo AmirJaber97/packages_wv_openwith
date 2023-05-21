@@ -118,7 +118,13 @@
   NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
   NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
 
-  NSURL *url = navigationAction.request.URL;
+  NSURL *url = nil;
+  if (@available(iOS 14.5, *)) {
+    url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
+  } else {
+    url = navigationAction.request.URL;
+  }
+
   if (!url || [url.absoluteString isEqualToString:@"about:blank"]) {
     NSLog(@"Invalid URL: Empty URL or about:blank");
     return nil;
