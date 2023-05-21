@@ -107,44 +107,16 @@
 
 - (WKWebView *)webView:(WKWebView *)webView
     createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
-               forNavigationAction:(WKNavigationAction *)navigationAction
-                    windowFeatures:(WKWindowFeatures *)windowFeatures {
-
-  NSLog(@"createWebViewWithConfiguration called");
-  NSLog(@"URL: %@", navigationAction.request.URL);
-  NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
-
-  NSString *urlString = navigationAction.request.URL.absoluteString;
-
-  BOOL matchDeferred = [urlString containsString:@"page.link"];
-
-  if (matchDeferred) {
-      NSLog(@"Opening deferred link");
-
-      NSURL *url = navigationAction.request.URL;
-      if ([[UIApplication sharedApplication] canOpenURL:url]) {
-          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-      } else {
-          NSLog(@"Invalid URL: %@", url);
-      }
-
-      return nil;
-  }
-
-  if (!navigationAction.targetFrame.isMainFrame) {
-      NSLog(@"Opening in external browser");
-
-      NSURL *url = navigationAction.request.URL;
-      if ([[UIApplication sharedApplication] canOpenURL:url]) {
-          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-      } else {
-          NSLog(@"Invalid URL: %@", url);
-      }
-
-      return nil;
-  }
-
-  return nil;
+    forNavigationAction:(WKNavigationAction *)navigationAction
+    windowFeatures:(WKWindowFeatures *)windowFeatures {
+        [self.UIDelegateAPI onCreateWebViewForDelegate:self
+        webView:webView
+        configuration:configuration
+        navigationAction:navigationAction
+        completion:^(FlutterError *error) {
+        NSAssert(!error, @"%@", error);
+        }];
+return nil;
 }
 
 
