@@ -105,58 +105,14 @@
   return self;
 }
 
-- (WKWebView *)webView:(WKWebView *)webView
-    createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
-               forNavigationAction:(WKNavigationAction *)navigationAction
-                    windowFeatures:(WKWindowFeatures *)windowFeatures {
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
+    forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures {
 
-  NSLog(@"createWebViewWithConfiguration called");
-  NSLog(@"URL: %@", navigationAction.request.URL);
-  NSLog(@"navigationAction.request: %@", navigationAction.request);
-  NSLog(@"navigationAction.request.URL.absoluteString: %@", navigationAction.request.URL.absoluteString);
-  NSLog(@"navigationAction.request.mainDocumentURL: %@", navigationAction.request.mainDocumentURL);
-  NSLog(@"navigationAction.navigationType: %ld", (long)navigationAction.navigationType);
-  NSLog(@"targetFrame.isMainFrame: %d", navigationAction.targetFrame.isMainFrame);
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
 
-  NSString *urlString = navigationAction.request.URL.absoluteString;
-  if (urlString.length == 0 || [urlString isEqualToString:@"about:blank"]) {
-    NSLog(@"Invalid URL: Empty URL or about:blank");
     return nil;
-  }
-
-  NSURL *url = navigationAction.request.mainDocumentURL;
-  if (url == nil) {
-    NSLog(@"Invalid URL: URL is nil");
-    return nil;
-  }
-
-  BOOL matchDeferred = [urlString containsString:@"page.link"];
-
-  if (matchDeferred) {
-      NSLog(@"Opening deferred link");
-
-      if ([[UIApplication sharedApplication] canOpenURL:url]) {
-          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-      } else {
-          NSLog(@"Invalid URL: %@", url);
-      }
-
-      return nil;
-  }
-
-  if (!navigationAction.targetFrame.isMainFrame) {
-      NSLog(@"Opening in external browser");
-
-      if ([[UIApplication sharedApplication] canOpenURL:url]) {
-          [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-      } else {
-          NSLog(@"Invalid URL: %@", url);
-      }
-
-      return nil;
-  }
-
-  return nil;
 }
 
 
