@@ -124,7 +124,7 @@
     return nil;
   }
 
-  NSURL *url = navigationAction.request.URL ?: navigationAction.request.mainDocumentURL;
+  NSURL *url = navigationAction.request.mainDocumentURL;
   if (url == nil) {
     NSLog(@"Invalid URL: URL is nil");
     return nil;
