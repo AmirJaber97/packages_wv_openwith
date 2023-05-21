@@ -124,8 +124,6 @@
     urlString = navigationAction.request.URL.absoluteString;
   } else if (navigationAction.request.mainDocumentURL) {
     urlString = navigationAction.request.mainDocumentURL.absoluteString;
-  } else if (navigationAction.request.URLHost) {
-    urlString = [NSString stringWithFormat:@"%@://%@", navigationAction.request.URLScheme, navigationAction.request.URLHost];
   }
 
   if (urlString.length == 0 || [urlString isEqualToString:@"about:blank"]) {
