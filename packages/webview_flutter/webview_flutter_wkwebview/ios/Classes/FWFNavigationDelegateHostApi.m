@@ -147,15 +147,21 @@
                                       completion:^(FWFWKNavigationActionPolicyEnumData *policy,
                                                    FlutterError *error) {
                                         NSAssert(!error, @"%@", error);
+                                        NSLog(@"Navigation Type: %ld", (long)navigationAction.navigationType);
+                                        NSLog(@"URL: %@", navigationAction.request.URL);
+                                        NSLog(@"URL Scheme: %@", navigationAction.request.URL.scheme);
                                         if (navigationAction.navigationType == WKNavigationTypeLinkActivated && [navigationAction.request.URL.scheme hasPrefix:@"http"]) {
+                                            NSLog(@"Opening URL in external browser: %@", navigationAction.request.URL);
                                             [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
                                             decisionHandler(WKNavigationActionPolicyCancel);
                                         } else {
+                                            NSLog(@"Allowing navigation in WebView");
                                             decisionHandler(
                                                 FWFNativeWKNavigationActionPolicyFromEnumData(policy));
                                         }
                                       }];
 }
+
 
 
 - (void)webView:(WKWebView *)webView
