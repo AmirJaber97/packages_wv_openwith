@@ -110,7 +110,7 @@
                forNavigationAction:(WKNavigationAction *)navigationAction
                     windowFeatures:(WKWindowFeatures *)windowFeatures {
 
-  NSLog(@"createWebViewWithConfiguration called");
+  NSLog(@"createWebViewWithConfiguration called test");
   NSLog(@"URL: %@", navigationAction.request.URL);
   NSLog(@"navigationAction.request: %@", navigationAction.request);
   NSLog(@"navigationAction.request.URL.absoluteString: %@", navigationAction.request.URL.absoluteString);
