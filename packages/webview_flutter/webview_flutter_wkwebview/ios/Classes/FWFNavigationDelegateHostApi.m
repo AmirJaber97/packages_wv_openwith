@@ -147,10 +147,16 @@
                                       completion:^(FWFWKNavigationActionPolicyEnumData *policy,
                                                    FlutterError *error) {
                                         NSAssert(!error, @"%@", error);
-                                        decisionHandler(
-                                            FWFNativeWKNavigationActionPolicyFromEnumData(policy));
+                                        if (navigationAction.navigationType == WKNavigationTypeLinkActivated && [navigationAction.request.URL.scheme hasPrefix:@"http"]) {
+                                            [[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+                                            decisionHandler(WKNavigationActionPolicyCancel);
+                                        } else {
+                                            decisionHandler(
+                                                FWFNativeWKNavigationActionPolicyFromEnumData(policy));
+                                        }
                                       }];
 }
+
 
 - (void)webView:(WKWebView *)webView
     didFailNavigation:(WKNavigation *)navigation
